@@ -1,4 +1,4 @@
-#include "sshell.h"
+#include "shell.h"
 #include "error_checking.h"
 #include <stdio.h>
 #include <stdlib.h>
@@ -12,12 +12,11 @@
 #define FALSE 0
 #define equals(s1, s2)	!strcmp(s1, s2)
 
-void childReaper(int sig){
-	while(waitpid(-1, NULL, WNOHANG) > 0);
-	return;
-}
-
 BOOLEAN executeCommand(char** args){
+	if (!args){
+		printf("\n");
+		return TRUE;
+	}
 	if (equals(*args, "exit"))
 		return FALSE;
 	if (equals(*args, "cd")){

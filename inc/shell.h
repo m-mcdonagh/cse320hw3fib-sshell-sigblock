@@ -1,3 +1,5 @@
+#ifndef SHELL
+#define SHELL
 #include <stdlib.h>
 #include <stdio.h>
 #include <ctype.h>
@@ -85,10 +87,9 @@ char** commandSplitter(char* commandLine, int maxArgs){
  * 	TRUE if shell should keep executing
  * 	FALSE if shell should terminate
  */
-BOOLEAN executeCommand(char** arguments);
-
+BOOLEAN executeCommand(char** args);
 /* for testing purposes on executeCommand()
-{
+BOOLEAN executeCommand(char** args){
 	for(int i=0; arguments[i]; i++)
 		printf("%d) %s\t", i+1, arguments[i]);
 	printf("\n");
@@ -120,13 +121,11 @@ void shell_loop(int maxArgs){
 		printf("> ");
 		getline(&commandLine, &bufsize, stdin);
 		args = commandSplitter(commandLine, maxArgs);
-		if (args){
-			notExit = executeCommand(args);
+		notExit = executeCommand(args);
+		if (args)
 			free(args);
-		}
-		else
-			printf("ERROR: not a valid command, type \"help\" for a list of commands.\n");
 		free(commandLine);
 		commandLine = NULL;
 	}
 }
+#endif
