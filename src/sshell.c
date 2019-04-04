@@ -20,7 +20,27 @@ void childReaper(int sig){
 BOOLEAN executeCommand(char** args){
 	if (equals(*args, "exit"))
 		return FALSE;
-	
+	if (equals(*args, "cd")){
+		if (!*++args)
+			fprintf(stderr, "No such directory.\n");
+		else{
+			char* cwd = malloc(256*sizeof(char));
+			if ((cwd = getcwd(cwd, 256)) == NULL)
+				fprintf(stderr, "Error retreiving Current Working Directory\n");
+			else{
+				char* nwd = malloc(strlen(cwd) + strlen(*args) + 2);
+				strcpy(nwd, cwd);
+				strcat(nwd, "/");
+				strcat(nwd, *args);
+				if (chdir(*args))
+					fprintf(stderr, "No such directory \"%s\".\n", nwd);
+				free(nwd);
+				free(cwd);
+			}
+		}
+		return TRUE;
+	}
+
 	pid_t pid;
 	if ((pid = Fork()) == 0){
 		execvp(*args, args);
