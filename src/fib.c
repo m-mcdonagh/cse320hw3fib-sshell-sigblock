@@ -1,18 +1,10 @@
+#include "error_checking.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
 #include <sys/types.h>
 #include <sys/wait.h>
-
-pid_t Fork(){
-	pid_t output;
-	if ((output = fork()) < 0){
-		fprintf(stderr, "Fork Error\n");
-		exit(EXIT_FAILURE);
-	}
-	return output;
-}
 
 int main(int argc, char** argv) {
 	if (argc != 2){
