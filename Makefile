@@ -12,3 +12,15 @@ sigblock:
 
 clean:
 	rm artist_manager fib simple_shell shell
+
+cleanart:
+	rm artist_manager
+
+cleanfib:
+	rm fib
+
+cleansshell:
+	rm simple_shell
+
+cleansigblock:
+	rm shell
