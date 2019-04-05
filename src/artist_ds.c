@@ -80,6 +80,7 @@ void assign(pid_t x){
 			//SIGUSR1
 			return;
 		}
+		cursor = cursor->next;
 	}
 	fprintf(stderr, "Error: there exists no artist with PID %d.\n", x);
 }
@@ -88,10 +89,11 @@ void withdraw(pid_t x){
 	struct artist* cursor = head;
 	while (cursor){
 		if (cursor->pid == x){
-			cursor->assigned = TRUE;
+			cursor->assigned = FALSE;
 			//SIGUSR2
 			return;
 		}
+		cursor = cursor->next;
 	}
 	fprintf(stderr, "Error: there exists no artist with PID %d.\n", x);
 }
@@ -100,7 +102,8 @@ void list(){
 	char output[256];
 	struct artist* cursor = head;
 	while (cursor){
-		sprintf(output, "%d %s", (int)(cursor->pid), cursor->assigned? "ASSIGNED" : "WAITING");
+		sprintf(output, "%d %s\n", (int)(cursor->pid), cursor->assigned? "ASSIGNED" : "WAITING");
 		cse320_print(output);
+		cursor = cursor->next;
 	}
 }

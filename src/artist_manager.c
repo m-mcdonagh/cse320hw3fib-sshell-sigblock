@@ -1,6 +1,9 @@
 #include "defs.h"
+#include "artist_manager.h"
 #include "shell.h"
 #include <stdio.h>
+#include <stdlib.h>
+#include <sys/types.h>
 #define equals(s1, s2) !strcmp(s1, s2)
 #define BOOLEAN char
 #define TRUE 1
@@ -25,16 +28,41 @@ BOOLEAN executeCommand(char** args){
 	if (equals(*args, "date")){
 	}
 	if (equals(*args, "hire")){
+		int n;
+		if (*++args && (n = atoi(*args)) > 0)
+			hire(n);
+		else
+			fprintf(stderr, "Error: invalid arguments for \"hire\".");
 	}
 	if (equals(*args, "fire")){
+		if (*++args){
+			pid_t x = (pid_t)atoi(*args);
+			fire(x);
+		}
+		else
+			fprintf(stderr, "Error: invalid arguments for \"fire\".");
 	}
 	if (equals(*args, "fireall")){
+		fireall();
 	}
 	if (equals(*args, "assign")){
+		if (*++args){
+			pid_t x = (pid_t)atoi(*args);
+			assign(x);
+		}
+		else
+			fprintf(stderr, "Error: invalid arguments for \"fire\".");
 	}
 	if (equals(*args, "withdraw")){
+		if (*++args){
+			pid_t x = (pid_t)atoi(*args);
+			withdraw(x);
+		}
+		else
+			fprintf(stderr, "Error: invalid arguments for \"fire\".");
 	}
 	if (equals(*args, "list")){
+		list();
 	}
 	if (equals(*args, "exit")){
 		return FALSE;
