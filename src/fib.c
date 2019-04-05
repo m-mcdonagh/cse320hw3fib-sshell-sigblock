@@ -23,12 +23,17 @@ int main(int argc, char** argv) {
 	}
 
 	pid_t pid;
-	if ((pid = Fork()) == 0){
-		printf("%d\n", fib[n % 60]);
-		exit(0);
-	}
-	if (waitpid(pid, NULL, 0) < 0){
+	if ((pid = Fork()) == 0)
+		exit(fib[n % 60]);
+	
+	int status;	
+	if (waitpid(pid, &status, 0) < 0){
 		fprintf(stderr, "Error reaping child\n");
 	}
+	if (WIFEXITED(status))
+		printf("%d\n", WEXITSTATUS(status));
+	else
+		fprintf(stderr, "Error: Child did not exit properly\n");
+
 	exit(0);
 }
