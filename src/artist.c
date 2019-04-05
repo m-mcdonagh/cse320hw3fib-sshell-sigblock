@@ -41,6 +41,7 @@ void artistProcess(){
 
 	Signal(SIGUSR1, setAssigned);
 	Signal(SIGUSR2, setWaiting);
+	Signal(SIGINT, SIG_DFL);
 
 	while(alive)
 		pause();

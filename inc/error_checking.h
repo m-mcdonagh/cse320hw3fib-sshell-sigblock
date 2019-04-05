@@ -8,6 +8,7 @@
 
 pid_t Fork();
 void Signal(int signum, __sighandler_t handler);
+void Kill(pid_t pid, int sig);
 void childReaper(int sig);
 
 #endif

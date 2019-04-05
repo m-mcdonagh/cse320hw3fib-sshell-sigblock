@@ -11,6 +11,7 @@
 	void assign(pid_t x);
 	void withdraw(pid_t x);
 	void list();
+	void reapAndRemove(int sig);
 
 // Defined in artist.c
 	void artistProcess();

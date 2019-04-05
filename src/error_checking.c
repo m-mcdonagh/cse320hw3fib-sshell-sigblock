@@ -21,6 +21,13 @@ void Signal(int signum, __sighandler_t handler){
 	}
 }
 
+void Kill(pid_t pid, int sig){
+	if (kill(pid, sig)){
+		fprintf(stderr, "Error sending signal to %d.\n", (int)pid);
+		exit(EXIT_FAILURE);
+	}
+}
+
 void childReaper(int sig){
 	while(waitpid(-1, NULL, WNOHANG) > 0);
 	return;

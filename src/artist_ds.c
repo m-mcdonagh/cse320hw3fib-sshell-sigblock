@@ -1,6 +1,7 @@
 #include "defs.h"
 #include "artist_manager.h"
 #include "error_checking.h"
+#include <sys/wait.h>
 #include <sys/types.h>
 #define BOOLEAN char
 #define TRUE 1
@@ -52,7 +53,7 @@ void fire(pid_t x){
 				prev->next = cursor->next;
 			else
 				head = cursor->next;
-			//kill or somehting lmao
+			Kill(x, SIGINT);
 			free(cursor);
 			return;
 		}
@@ -67,6 +68,7 @@ void fireall(){
 	struct artist* prev = NULL;
 	head = NULL;
 	while (cursor){
+		Kill(cursor->pid, SIGINT);
 		prev = cursor;
 		cursor = cursor->next;
 		free(prev);
@@ -78,7 +80,7 @@ void assign(pid_t x){
 	while (cursor){
 		if (cursor->pid == x){
 			cursor->assigned = TRUE;
-			//SIGUSR1
+			Kill(x, SIGUSR1);
 			return;
 		}
 		cursor = cursor->next;
@@ -91,7 +93,7 @@ void withdraw(pid_t x){
 	while (cursor){
 		if (cursor->pid == x){
 			cursor->assigned = FALSE;
-			//SIGUSR2
+			Kill(x, SIGUSR2);
 			return;
 		}
 		cursor = cursor->next;
@@ -106,5 +108,27 @@ void list(){
 		sprintf(output, "%d %s\n", (int)(cursor->pid), cursor->assigned? "ASSIGNED" : "WAITING");
 		cse320_print(output);
 		cursor = cursor->next;
+	}
+}
+
+void reapAndRemove(int sig){
+	pid_t pid;
+	struct artist* cursor;
+	struct artist* prev;
+	while((pid = waitpid(-1, NULL, WNOHANG)) > 0){
+		cursor = head;
+		prev = NULL;
+		while(cursor){
+			if (cursor->pid == pid){
+				if (prev)
+					prev->next = cursor->next;
+				else
+					head = cursor->next;
+				free(cursor);
+				break;
+			}	
+			prev = cursor;
+			cursor = cursor->next;
+		}
 	}
 }

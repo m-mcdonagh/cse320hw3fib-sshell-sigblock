@@ -1,8 +1,10 @@
 #include "defs.h"
 #include "artist_manager.h"
+#include "error_checking.h"
 #include "shell.h"
 #include <stdio.h>
 #include <stdlib.h>
+#include <signal.h>
 #include <sys/types.h>
 #define equals(s1, s2) !strcmp(s1, s2)
 #define BOOLEAN char
@@ -32,15 +34,15 @@ BOOLEAN executeCommand(char** args){
 		if (*++args && (n = atoi(*args)) > 0)
 			hire(n);
 		else
-			fprintf(stderr, "Error: invalid arguments for \"hire\".");
+			fprintf(stderr, "Error: invalid arguments for \"hire\".\n");
 	}
 	if (equals(*args, "fire")){
-		if (*++args){
-			pid_t x = (pid_t)atoi(*args);
-			fire(x);
+		int x;
+		if (*++args && (x = atoi(*args)) > 0){
+			fire((pid_t)x);
 		}
 		else
-			fprintf(stderr, "Error: invalid arguments for \"fire\".");
+			fprintf(stderr, "Error: invalid arguments for \"fire\".\n");
 	}
 	if (equals(*args, "fireall")){
 		fireall();
@@ -51,7 +53,7 @@ BOOLEAN executeCommand(char** args){
 			assign(x);
 		}
 		else
-			fprintf(stderr, "Error: invalid arguments for \"fire\".");
+			fprintf(stderr, "Error: invalid arguments for \"assign\".\n");
 	}
 	if (equals(*args, "withdraw")){
 		if (*++args){
@@ -59,7 +61,7 @@ BOOLEAN executeCommand(char** args){
 			withdraw(x);
 		}
 		else
-			fprintf(stderr, "Error: invalid arguments for \"fire\".");
+			fprintf(stderr, "Error: invalid arguments for \"withdraw\".\n");
 	}
 	if (equals(*args, "list")){
 		list();
@@ -70,7 +72,15 @@ BOOLEAN executeCommand(char** args){
 	return TRUE;
 }
 
+void end(int sig){
+	fireall();
+	exit(0);
+}
+
 int main(void){
+	Signal(SIGINT, end);
+	Signal(SIGCHLD, reapAndRemove);
 	shell_loop(32);
+	fireall();
 	exit(0);
 }
