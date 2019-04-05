@@ -17,7 +17,7 @@ void setAssigned(int sig){
 		assigned = TRUE;
 		char msg[64];
 		sprintf(msg, "ARTIST %d IS ASSIGNED TO A JOB\n", (int)pid);
-		cse302_print(msg);
+		cse320_print(msg);
 	}
 	else
 		fprintf(stderr, "Error: %d is already assigned\n", (int)pid);
@@ -34,7 +34,7 @@ void setWaiting(int sig){
 		fprintf(stderr, "Error: %d isn't assigned to a job\n", (int)pid);
 }
 
-artistProcess(){
+void artistProcess(){
 	pid = getpid();
 	assigned = FALSE;
 	alive = TRUE;

@@ -1,4 +1,5 @@
 #include "defs.h"
+#include "artist_manager.h"
 #include "error_checking.h"
 #include <sys/types.h>
 #define BOOLEAN char
@@ -35,7 +36,7 @@ void hire(int n){
 	int i;
 	for (i=0; i<n; i++){
 		if ((pid = Fork()) == 0){
-			//artistProcess();
+			artistProcess();
 			exit(EXIT_FAILURE); // artistProcess() doesn't return
 		}
 		newArtist(pid);

@@ -1,5 +1,6 @@
+#ifndef ARTIST_MANAGER
+#define ARTIST_MANAGER
 #include <sys/types.h>
-
 
 // Defined in artist_ds.c
 	struct artist;
@@ -10,3 +11,8 @@
 	void assign(pid_t x);
 	void withdraw(pid_t x);
 	void list();
+
+// Defined in artist.c
+	void artistProcess();
+
+#endif
