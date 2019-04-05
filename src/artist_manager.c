@@ -4,6 +4,7 @@
 #include "shell.h"
 #include <stdio.h>
 #include <stdlib.h>
+#include <unistd.h>
 #include <signal.h>
 #include <sys/types.h>
 #define equals(s1, s2) !strcmp(s1, s2)
@@ -28,6 +29,13 @@ BOOLEAN executeCommand(char** args){
 		cse320_print( helpstring );
 	}
 	if (equals(*args, "date")){
+		if (Fork() == 0){
+			*args = "/bin/date";
+			execvp(*args, args);
+			fprintf(stderr, "Error running bin/date.\n");
+			exit(EXIT_FAILURE);
+		}
+		pause();
 	}
 	if (equals(*args, "hire")){
 		int n;
