@@ -44,37 +44,6 @@ void hire(int n){
 	}
 }
 
-void fire(pid_t x){
-	struct artist* cursor = head;
-	struct artist* prev = NULL;
-	while(cursor){
-		if (cursor->pid == x){
-			if (prev)
-				prev->next = cursor->next;
-			else
-				head = cursor->next;
-			Kill(x, SIGINT);
-			free(cursor);
-			return;
-		}
-		prev = cursor;
-		cursor = cursor->next;
-	}
-	fprintf(stderr, "Error: there exists no artist with PID %d.\n", x);
-}
-
-void fireall(){
-	struct artist* cursor = head;
-	struct artist* prev = NULL;
-	head = NULL;
-	while (cursor){
-		Kill(cursor->pid, SIGINT);
-		prev = cursor;
-		cursor = cursor->next;
-		free(prev);
-	}
-}
-
 void assign(pid_t x){
 	struct artist* cursor = head;
 	while (cursor){
@@ -99,6 +68,41 @@ void withdraw(pid_t x){
 		cursor = cursor->next;
 	}
 	fprintf(stderr, "Error: there exists no artist with PID %d.\n", x);
+}
+
+void fire(pid_t x){
+	struct artist* cursor = head;
+	struct artist* prev = NULL;
+	while(cursor){
+		if (cursor->pid == x){
+			if (prev)
+				prev->next = cursor->next;
+			else
+				head = cursor->next;
+			if (cursor->assigned)
+				Kill(cursor->pid, SIGUSR2);
+			Kill(x, SIGINT);
+			free(cursor);
+			return;
+		}
+		prev = cursor;
+		cursor = cursor->next;
+	}
+	fprintf(stderr, "Error: there exists no artist with PID %d.\n", x);
+}
+
+void fireall(){
+	struct artist* cursor = head;
+	struct artist* prev = NULL;
+	head = NULL;
+	while (cursor){
+		if (cursor->assigned)
+			Kill(cursor->pid, SIGUSR2);
+		Kill(cursor->pid, SIGINT);
+		prev = cursor;
+		cursor = cursor->next;
+		free(prev);
+	}
 }
 
 void list(){
