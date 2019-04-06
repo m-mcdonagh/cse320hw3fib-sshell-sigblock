@@ -12,6 +12,7 @@
 	void withdraw(pid_t x);
 	void list();
 	void reapAndRemove(int sig);
+	void childFree();
 
 // Defined in artist.c
 	void artistProcess();

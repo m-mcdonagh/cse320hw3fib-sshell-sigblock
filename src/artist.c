@@ -1,5 +1,6 @@
 #include "error_checking.h"
 #include "defs.h"
+#include "artist_manager.h"
 #include <stdio.h>
 #include <sys/types.h>
 #include <signal.h>
@@ -35,6 +36,8 @@ void setWaiting(int sig){
 }
 
 void artistProcess(){
+	childFree();
+
 	pid = getpid();
 	assigned = FALSE;
 	alive = TRUE;

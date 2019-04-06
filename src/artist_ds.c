@@ -136,3 +136,13 @@ void reapAndRemove(int sig){
 		}
 	}
 }
+
+void childFree(){
+	struct artist* cursor = head;
+	struct artist* temp;
+	while (cursor){
+		temp = cursor;
+		cursor = cursor->next;
+		free(temp);
+	}
+}
